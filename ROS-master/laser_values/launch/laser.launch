@@ -1,0 +1,4 @@
+<launch>
+	<node pkg="laser_values" type="scan.py" name="Hokuyo" output="screen">
+	</node>
+</launch>

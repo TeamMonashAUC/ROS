@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="rc_car_xacro">
+	<include filename="$(find rc_car_simulation)/urdf/rc_car_gazebo.xacro"/>
+	<include filename="$(find rc_car_simulation)/urdf/rc_car_constants_macros.xacro"/>
+	<!--Base and chassis-->
+	<link name="chassis"/>
+	<link name="base_link">
+		<visual>
+			<geometry>
+				<box size="0.2 .3 .075"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<material name="blue">
+				<color rgba="44 130 201 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<mass value="4.0"/>
+			<inertia ixx="0.031875" ixy="0.0" ixz="0.0" iyy="0.015208" iyz="0.0" izz="0.04333"/>
+		</inertial>
+	</link>
+	<joint name="base_link_joint" type="fixed">
+		<origin xyz="0 0 0.06" rpy="0 0 0"/>
+		<parent link="chassis"/>
+		<child link="base_link"/>
+	</joint>
+
+	<!--Left front wheel -->
+	<link name="left_front_wheel">
+		<visual>
+			<geometry>
+				<cylinder length="${length_wheel}" radius="${radius_wheel}"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<material name="blue"/>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<cylinder length="${length_wheel}" radius="${radius_wheel}"/>
+			</geometry>
+		</collision>
+		<inertial>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<mass value="0.34055"/>
+			<inertia ixx="0.0004256875" ixy="0.0" ixz="0.0" iyy="0.0002128437" iyz="0.0" izz="0.0002128437"/>
+		</inertial>
+	</link>
+	<joint name="chassis_to_left_front_wheel" type="continuous">
+		<axis xyz="0 0 -1"/>
+		<parent link="left_steering_hinge"/>
+		<child link="left_front_wheel"/>
+		<origin xyz="0 0 0" rpy="0 1.5708 0"/>
+		<limit velocity="100.0" effort="10.0"/>
+	</joint>
+	<transmission name="trans1">
+    		<type>transmission_interface/SimpleTransmission</type>
+    		<joint name="chassis_to_left_front_wheel">
+      			<hardwareInterface>EffortJointInterface</hardwareInterface>
+    		</joint>
+    		<actuator name="motor1">
+      			<hardwareInterface>EffortJointInterface</hardwareInterface>
+      			<mechanicalReduction>1</mechanicalReduction>
+    		</actuator>
+  	</transmission>
+
+	<!--Left rear wheel -->
+	<link name="left_rear_wheel">
+		<visual>
+			<geometry>
+				<cylinder length="${length_wheel}" radius="${radius_wheel}"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<material name="blue"/>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<cylinder length="${length_wheel}" radius="${radius_wheel}"/>
+			</geometry>
+		</collision>
+		<inertial>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<mass value="0.34055"/>
+			<inertia ixx="0.0004256875" ixy="0.0" ixz="0.0" iyy="0.0002128437" iyz="0.0" izz="0.0002128437"/>
+		</inertial>
+	</link>
+	<joint name="chassis_to_left_rear_wheel" type="continuous">
+		<axis xyz="0 0 -1"/>
+		<parent link="base_link"/>
+		<child link="left_rear_wheel"/>
+		<origin xyz="-0.1 -0.1 0" rpy="0 1.5708 0"/>
+		<dynamics damping="0.1" friction="0.5"/>
+		<limit velocity="100.0" effort="10.0"/>
+	</joint>
+	<transmission name="trans2">
+    		<type>transmission_interface/SimpleTransmission</type>
+    		<joint name="chassis_to_left_rear_wheel">
+      			<hardwareInterface>EffortJointInterface</hardwareInterface>
+    		</joint>
+    		<actuator name="motor2">
+      			<hardwareInterface>EffortJointInterface</hardwareInterface>
+      			<mechanicalReduction>1</mechanicalReduction>
+    		</actuator>
+  	</transmission>
+
+	<!--Right front wheel-->
+	<link name="right_front_wheel">
+		<visual>
+			<geometry>
+				<cylinder length="${length_wheel}" radius="${radius_wheel}"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<material name="blue"/>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<cylinder length="${length_wheel}" radius="${radius_wheel}"/>
+			</geometry>
+		</collision>
+		<inertial>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<mass value="0.34055"/>
+			<inertia ixx="0.0004256875" ixy="0.0" ixz="0.0" iyy="0.0002128437" iyz="0.0" izz="0.0002128437"/>
+		</inertial>
+	</link>
+	<joint name="chassis_to_right_front_wheel" type="continuous">
+		<axis xyz="0 0 -1"/>
+		<parent link="right_steering_hinge"/>
+		<child link="right_front_wheel"/>
+		<origin xyz="0 0 0" rpy="0 1.5708 0"/>
+		<dynamics damping="0.1" friction="0.5"/>
+		<limit velocity="100.0" effort="10.0"/>
+	</joint>
+	<transmission name="trans3">
+    		<type>transmission_interface/SimpleTransmission</type>
+    		<joint name="chassis_to_right_front_wheel">
+      			<hardwareInterface>EffortJointInterface</hardwareInterface>
+    		</joint>
+    		<actuator name="motor3">
+      			<hardwareInterface>EffortJointInterface</hardwareInterface>
+      			<mechanicalReduction>1</mechanicalReduction>
+    		</actuator>
+  	</transmission>
+
+	<!--Right rear wheel-->
+	<link name="right_rear_wheel">
+		<visual>
+			<geometry>
+				<cylinder length="${length_wheel}" radius="${radius_wheel}"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<material name="blue"/>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<cylinder length="${length_wheel}" radius="${radius_wheel}"/>
+			</geometry>
+		</collision>
+		<inertial>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<mass value="0.34055"/>
+			<inertia ixx="0.0004256875" ixy="0.0" ixz="0.0" iyy="0.0002128437" iyz="0.0" izz="0.0002128437"/>
+		</inertial>
+	</link>
+	<joint name="chassis_to_right_rear_wheel" type="continuous">
+		<axis xyz="0 0 -1"/>
+		<parent link="base_link"/>
+		<child link="right_rear_wheel"/>
+		<origin xyz="0.1 -0.1 0" rpy="0 1.5708 0"/>
+		<dynamics damping="0.1" friction="0.5"/>
+		<limit velocity="100.0" effort="10.0"/>
+	</joint>
+	<transmission name="trans4">
+    		<type>transmission_interface/SimpleTransmission</type>
+    		<joint name="chassis_to_right_rear_wheel">
+      			<hardwareInterface>EffortJointInterface</hardwareInterface>
+    		</joint>
+    		<actuator name="motor4">
+      			<hardwareInterface>EffortJointInterface</hardwareInterface>
+      			<mechanicalReduction>1</mechanicalReduction>
+    		</actuator>
+  	</transmission>
+	<!--Left front wheel steering-->
+	<link name="left_steering_hinge">
+		<inertial>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+  			<mass value="0.100" />
+  			<inertia ixx="4E-06" ixy="0" ixz="0" iyy="4E-06" iyz="0" izz="4E-06" />
+		</inertial>
+		<visual>
+			<xacro:steering_hinge_geometry/>
+		</visual>
+		<collision>
+			<xacro:steering_hinge_geometry/>
+		</collision>
+	</link>
+	<joint name="left_steering_hinge_joint" type="revolute">
+		<origin xyz="-0.1 0.1 0" rpy="1.5708 0 0"/>
+		<parent link="base_link"/>
+		<child link="left_steering_hinge"/>
+		<axis xyz="0 -1 0"/>
+		<limit lower="-1.0" upper="1.0" effort="10" velocity="100"/>
+	</joint>
+	<transmission name="trans5" type="SimpleTransmission">
+    		<type>transmission_interface/SimpleTransmission</type>
+    		<joint name="left_steering_hinge_joint">
+     			<hardwareInterface>EffortJointInterface</hardwareInterface>
+    		</joint>
+    		<actuator name="motor5">
+      			<hardwareInterface>EffortJointInterface</hardwareInterface>
+      			<mechanicalReduction>1</mechanicalReduction>
+    		</actuator>
+  	</transmission>
+	<!--Right front wheel steering-->
+	<link name="right_steering_hinge">
+		<inertial>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+  			<mass value="0.100" />
+  			<inertia ixx="4E-06" ixy="0" ixz="0" iyy="4E-06" iyz="0" izz="4E-06" />
+		</inertial>
+		<visual>
+			<xacro:steering_hinge_geometry/>
+		</visual>
+		<collision>
+			<xacro:steering_hinge_geometry/>
+		</collision>
+	</link>
+	<joint name="right_steering_hinge_joint" type="revolute">
+		<origin xyz="0.1 0.1 0" rpy="1.5708 0 0"/>
+		<parent link="base_link"/>
+		<child link="right_steering_hinge"/>
+		<axis xyz="0 -1 0"/>
+		<limit lower="-1.0" upper="1.0" effort="10" velocity="100"/>
+	</joint>
+	<transmission name="trans6" type="SimpleTransmission">
+    		<type>transmission_interface/SimpleTransmission</type>
+    		<joint name="right_steering_hinge_joint">
+     			<hardwareInterface>EffortJointInterface</hardwareInterface>
+    		</joint>
+    		<actuator name="motor6">
+      			<hardwareInterface>EffortJointInterface</hardwareInterface>
+      			<mechanicalReduction>1</mechanicalReduction>
+    		</actuator>
+  	</transmission>
+	<!--Hokuyo lidar sensor-->
+	<link name="hokuyo_link">
+	    <collision>
+	      		<xacro:steering_hinge_geometry/>
+	    </collision>
+	    <visual>
+      		<origin xyz="0 0 0" rpy="0 0 0"/>
+      		<geometry>
+        		<mesh filename="package://rc_car_simulation/meshes/hokuyo.dae"/>
+      		</geometry>
+    	    </visual>
+	    <inertial>
+	      		<mass value="0.130" />
+	      		<origin xyz="0 0 0" rpy="0 0 0"/>
+	      		<inertia ixx="4e-6" ixy="0" ixz="0" iyy="4e-6" iyz="0" izz="4e-6" />
+	    </inertial>
+	</link>
+	 <joint name="hokuyo_joint" type="fixed">
+		<axis xyz="1 0 0"/>
+		<origin xyz="0 0.1 0.075" rpy="0 0 1.5708"/>
+    		<parent link="base_link"/>
+    		<child link="hokuyo_link"/>
+  	</joint>
+	<!--IMU sensor -->
+	<link name="imu_link">
+		<inertial>
+			<mass value="0.01"/>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.000001" iyz="0.0" izz="0.0001"/>
+		</inertial>
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<box size="0.01 0.01 0.01"/>
+			</geometry>
+			<material name="red">
+				<color rgba="255 0 0 0"/>
+			</material>
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<box size="0.01 0.01 0.01"/>
+			</geometry>
+		</collision>
+	</link>
+	<joint name="imu_joint" type="fixed">
+		<axis xyz="0 1 0"/>
+		<origin xyz="-0.05 0.1 0.05"/>
+		<parent link="base_link"/>
+		<child link="imu_link"/>
+	</joint>
+</robot>

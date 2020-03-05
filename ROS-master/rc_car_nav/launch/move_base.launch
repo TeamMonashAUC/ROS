@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+   
+   <master auto="start"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find rc_car_hector_slam)/maps/lab.yaml"/>
+   <include file="$(find rc_car_hector_slam)/launch/slam.launch" />
+
+   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="controller_frequency" value="5.0"/>
+    <param name="controller_patiente" value="15.0"/>
+    <rosparam file="$(find rc_car_nav)/yaml/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+    <rosparam file="$(find rc_car_nav)/yaml/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find rc_car_nav)/yaml/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find rc_car_nav)/yaml/global_costmap_params.yaml" command="load" /> 
+    <rosparam file="$(find rc_car_nav)/yaml/base_local_planner_params.yaml" command="load" />
+   </node>
+
+</launch> 
