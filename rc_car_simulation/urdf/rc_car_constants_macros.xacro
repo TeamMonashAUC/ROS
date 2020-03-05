@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<xacro:property name="length_wheel" value="0.045"/>
+	<xacro:property name="radius_wheel" value="0.05"/>
+	<xacro:macro name="left_wheel_inertial" params="mass">
+		<inertial>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<mass value="${mass}"/>
+			<inertia ixx="0.0004256875" ixy="0.0" ixz="0.0" iyy="0.0002128437" iyz="0.0" izz="0.0002128437"/>
+		</inertial>
+	</xacro:macro>
+	<xacro:macro name="right_wheel_inertial" params="mass">
+		<inertial>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<mass value="${mass}"/>
+			<inertia ixx="0.0004256875" ixy="0.0" ixz="0.0" iyy="0.0002128437" iyz="0.0" izz="0.0002128437"/>
+		</inertial>
+	</xacro:macro>
+	<xacro:macro name="steering_hinge_inertial_params">
+  		<origin xyz="0 0 0" rpy="0 0 0" />
+  		<mass value="0.100" />
+  		<inertia ixx="4E-06" ixy="0" ixz="0" iyy="4E-06" iyz="0" izz="4E-06" />
+	</xacro:macro>
+	<xacro:macro name="steering_hinge_geometry">
+  		<origin xyz="0 0 0" rpy="0 0 0" />
+  		<geometry>
+    			<sphere radius="0.01"/>
+  		</geometry>
+	</xacro:macro>
+</robot>

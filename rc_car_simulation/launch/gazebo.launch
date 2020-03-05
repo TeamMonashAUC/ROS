@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<launch>
+	<!--there are arguments you can pass this launch file, for example paused:=true -->
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="world_name" value="$(find rc_car_simulation)/worlds/empty.world"/>
+		<arg name="debug" value="false"/>
+		<arg name="gui" value="true"/>
+		<arg name="paused" value="false"/>
+		<arg name="use_sim_time" value="true"/>
+	</include>
+	<arg name="model"/>
+	<param name="robot_description" command="$(find xacro)/xacro $(find rc_car_simulation)/urdf/$(arg model)"/>
+	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model rc_car -param robot_description -z 0.05" />
+	<!-- Load joint controller configurations from YAML file to parameter server -->
+  	<rosparam file="$(find rc_car_control)/config/rc_car_control.yaml" command="load"/>
+
+  	<!-- load the controllers -->
+  	<node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    	output="screen" ns="/rc_car" args="left_front_wheel_position_controller left_rear_wheel_position_controller right_front_position_controller right_rear_position_controller left_steering_hinge_position_controller right_steering_hinge_position_controller joint_state_controller"/>
+
+  	<!-- convert joint states to TF transforms for rviz, etc -->
+  	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+    respawn="false" output="screen">
+    	<remap from="/joint_states" to="/rc_car/joint_states" />
+  	</node>
+	<node name="joint_state_pulisher" pkg="joint_state_publisher" type="joint_state_publisher">
+		<param name="/use_gui" value="false"/>
+		<rosparam param="/source_list">/rc_car/joint_states</rosparam>
+	</node>
+</launch>
